@@ -86,6 +86,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		robot.arcadeDrive(stick);
 	}
 }
 
