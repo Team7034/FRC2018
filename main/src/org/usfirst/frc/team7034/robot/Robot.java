@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 /**
@@ -22,10 +22,10 @@ public class Robot extends IterativeRobot {
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
 	
-	PWMTalonSRX front_left = new PWMTalonSRX(0);
-	PWMTalonSRX back_left = new PWMTalonSRX(1);
-	PWMTalonSRX front_right = new PWMTalonSRX(2);
-	PWMTalonSRX back_right = new PWMTalonSRX(3);
+	Spark front_left = new Spark(0);
+	Spark back_left = new Spark(1);
+	Spark front_right = new Spark(2);
+	Spark back_right = new Spark(3);
 	
 	SpeedControllerGroup left_motors = new SpeedControllerGroup(front_left, back_left);
 	SpeedControllerGroup right_motors = new SpeedControllerGroup(front_right, back_right);
@@ -79,6 +79,7 @@ public class Robot extends IterativeRobot {
 		case defaultAuto:
 		default:
 			// Put default auto code here
+			//driverStation.getGameSpecificMessage();
 			break;
 		}
 	}
