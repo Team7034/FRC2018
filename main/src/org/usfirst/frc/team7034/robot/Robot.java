@@ -3,14 +3,7 @@ package org.usfirst.frc.team7034.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-<<<<<<< HEAD
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
-=======
-import edu.wpi.first.wpilibj.PWMTalonSRX;
->>>>>>> branch 'master' of https://github.com/Team7034/FRC2018.git
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 /**
@@ -21,20 +14,12 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	
-<<<<<<< HEAD
-	Spark front_left = new Spark(0);
-	Spark back_left = new Spark(1);
-	Spark front_right = new Spark(2);
-	Spark back_right = new Spark(3);
-=======
-	PWMTalonSRX front_left;
-	PWMTalonSRX back_left;
+	Spark front_left;
+	Spark back_left;
+	Spark front_right;
+	Spark back_right;
+
 	SpeedControllerGroup left_motors;
->>>>>>> branch 'master' of https://github.com/Team7034/FRC2018.git
-	
-	PWMTalonSRX front_right;
-	PWMTalonSRX back_right;
 	SpeedControllerGroup right_motors;
 	
 	DifferentialDrive robot;
@@ -46,12 +31,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		front_left = new PWMTalonSRX(0);
-		back_left = new PWMTalonSRX(1);
+		front_left = new Spark(0);
+		back_left = new Spark(1);
 		left_motors = new SpeedControllerGroup(front_left, back_left);
 		
-		front_right = new PWMTalonSRX(2);
-		back_right = new PWMTalonSRX(3);
+		front_right = new Spark(2);
+		back_right = new Spark(3);
 		right_motors = new SpeedControllerGroup(front_right, back_right);
 		
 		robot = new DifferentialDrive(left_motors, right_motors);
@@ -78,19 +63,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-<<<<<<< HEAD
-		switch (autoSelected) {
-		case customAuto:
-			// Put custom auto code here
-			break;
-		case defaultAuto:
-		default:
-			// Put default auto code here
-			//driverStation.getGameSpecificMessage();
-			break;
-		}
-=======
->>>>>>> branch 'master' of https://github.com/Team7034/FRC2018.git
 	}
 
 	/**
