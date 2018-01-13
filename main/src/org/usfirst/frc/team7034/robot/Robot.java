@@ -2,10 +2,12 @@ package org.usfirst.frc.team7034.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,7 +22,15 @@ public class Robot extends IterativeRobot {
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
 	
-	RobotDrive robot;
+	PWMTalonSRX front_left = new PWMTalonSRX(0);
+	PWMTalonSRX back_left = new PWMTalonSRX(1);
+	PWMTalonSRX front_right = new PWMTalonSRX(2);
+	PWMTalonSRX back_right = new PWMTalonSRX(3);
+	
+	SpeedControllerGroup left_motors = new SpeedControllerGroup(front_left, back_left);
+	SpeedControllerGroup right_motors = new SpeedControllerGroup(front_right, back_right);
+	
+	DifferentialDrive robot;
 	Joystick stick;
 	Timer timer;
 
@@ -33,7 +43,7 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
-		robot = new RobotDrive(0, 1);
+		robot = new DifferentialDrive(left_motors, right_motors);
 		stick = new Joystick(1);
 		timer = new Timer();
 	}
@@ -86,7 +96,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		robot.arcadeDrive(stick);
+		robot.arcadeDrive(stick.getY(), stick.getX());
 	}
 }
 
