@@ -3,10 +3,14 @@ package org.usfirst.frc.team7034.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
+=======
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+>>>>>>> branch 'master' of https://github.com/Team7034/FRC2018.git
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 /**
@@ -17,22 +21,24 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
-	String autoSelected;
-	SendableChooser<String> chooser = new SendableChooser<>();
 	
+<<<<<<< HEAD
 	Spark front_left = new Spark(0);
 	Spark back_left = new Spark(1);
 	Spark front_right = new Spark(2);
 	Spark back_right = new Spark(3);
+=======
+	PWMTalonSRX front_left;
+	PWMTalonSRX back_left;
+	SpeedControllerGroup left_motors;
+>>>>>>> branch 'master' of https://github.com/Team7034/FRC2018.git
 	
-	SpeedControllerGroup left_motors = new SpeedControllerGroup(front_left, back_left);
-	SpeedControllerGroup right_motors = new SpeedControllerGroup(front_right, back_right);
+	PWMTalonSRX front_right;
+	PWMTalonSRX back_right;
+	SpeedControllerGroup right_motors;
 	
 	DifferentialDrive robot;
 	Joystick stick;
-	Timer timer;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -40,12 +46,16 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser);
+		front_left = new PWMTalonSRX(0);
+		back_left = new PWMTalonSRX(1);
+		left_motors = new SpeedControllerGroup(front_left, back_left);
+		
+		front_right = new PWMTalonSRX(2);
+		back_right = new PWMTalonSRX(3);
+		right_motors = new SpeedControllerGroup(front_right, back_right);
+		
 		robot = new DifferentialDrive(left_motors, right_motors);
-		stick = new Joystick(1);
-		timer = new Timer();
+		stick = new Joystick(0);
 	}
 
 	/**
@@ -61,10 +71,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoSelected = chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
 	}
 
 	/**
@@ -72,6 +78,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+<<<<<<< HEAD
 		switch (autoSelected) {
 		case customAuto:
 			// Put custom auto code here
@@ -82,6 +89,8 @@ public class Robot extends IterativeRobot {
 			//driverStation.getGameSpecificMessage();
 			break;
 		}
+=======
+>>>>>>> branch 'master' of https://github.com/Team7034/FRC2018.git
 	}
 
 	/**
@@ -89,7 +98,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
+		robot.arcadeDrive(stick.getY(), stick.getX());
 	}
 
 	/**
@@ -97,7 +106,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		robot.arcadeDrive(stick.getY(), stick.getX());
 	}
 }
 
