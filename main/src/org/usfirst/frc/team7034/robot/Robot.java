@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		front_left = new Spark(0);
+		front_left = new Spark(0);	//test
 		back_left = new Spark(1);
 		left_motors = new SpeedControllerGroup(front_left, back_left);
 		
