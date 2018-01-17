@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
-	
+public class Robot extends IterativeRobot {	
 	Spark front_left;
 	Spark back_left;	
 	Spark front_right;
@@ -42,6 +41,7 @@ public class Robot extends IterativeRobot {
 		
 		robot = new DifferentialDrive(left_motors, right_motors);
 		stick = new Joystick(0);
+		stick.setThrottleChannel(3);
 	}
 
 	/**
@@ -71,7 +71,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		robot.arcadeDrive(stick.getY(), stick.getX());
+		double speed = ((stick.getThrottle()+1)/2);
+		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
+		
+		
 	}
 
 	/**
