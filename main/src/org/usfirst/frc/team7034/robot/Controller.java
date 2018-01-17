@@ -8,6 +8,7 @@ public class Controller extends GenericHID {
 		super(port);
 	}
 	
+	//joysticks and triggers
 	public final double getLX() {
 		return getRawAxis(0);
 	}
@@ -32,13 +33,57 @@ public class Controller extends GenericHID {
 		return getRawAxis(3);
 	}
 
-	@Override
+	//buttons
+	public final boolean getA() {
+		return getRawButton(1);
+	}
+	
+	public final boolean getB() {
+		return getRawButton(2);
+	}
+	
+	public final boolean getXB() {
+		return getRawButton(3);
+	}
+	
+	public final boolean getYB() {
+		return getRawButton(4);
+	}
+	
+	public final boolean getLB() {
+		return getRawButton(5);
+	}
+	
+	public final boolean getRB() {
+		return getRawButton(6);
+	}
+	
+	public final boolean getBack() {
+		return getRawButton(7);
+	}
+	
+	public final boolean getStart() {
+		return getRawButton(8);
+	}
+	
+	public final boolean getLSB() {
+		return getRawButton(9);
+	}
+	
+	public final boolean getRSB() {
+		return getRawButton(10);
+	}
+	
+	//dpad
+	
+	
+	@Deprecated
 	public double getX(Hand hand) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
+	@Deprecated
 	public double getY(Hand hand) {
 		// TODO Auto-generated method stub
 		return 0;

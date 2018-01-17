@@ -89,8 +89,8 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		double speed = (stick.getThrottle()-1)/2;
 		robot.arcadeDrive(stick.getY()*speed, -stick.getX()*speed*.6);
-		m_base.set(cont.getLY()*.5);
-		m_arm.set(cont.getRY()*.5);
+		m_base.set(cont.getLY()*.45);
+		m_arm.set(cont.getRY()*.45);
 	}
 
 	/**
