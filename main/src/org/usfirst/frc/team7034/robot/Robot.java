@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import org.usfirst.frc.team7034.robot.Controller;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,11 +21,18 @@ public class Robot extends IterativeRobot {
 	Spark front_right;
 	Spark back_right;
 	
+	Spark base;
+	Spark arm;
+	
+	SpeedController m_base;
+	SpeedController m_arm;
+	
 	SpeedControllerGroup left_motors;
 	SpeedControllerGroup right_motors;
 	
 	DifferentialDrive robot;
 	Joystick stick;
+	Controller cont;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -31,17 +40,24 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		front_left = new Spark(0);
-		back_left = new Spark(1);
+		front_left = new Spark(4);
+		back_left = new Spark(5);
 		left_motors = new SpeedControllerGroup(front_left, back_left);
 		
 		front_right = new Spark(2);
 		back_right = new Spark(3);
 		right_motors = new SpeedControllerGroup(front_right, back_right);
 		
+		base = new Spark(0);
+		arm = new Spark(1);
+		
+		m_base = base;
+		m_arm = arm;
+		
 		robot = new DifferentialDrive(left_motors, right_motors);
-		stick = new Joystick(0);
+		stick = new Joystick(1);
 		stick.setThrottleChannel(3);
+		cont = new Controller(0);
 	}
 
 	/**
@@ -73,6 +89,8 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		double speed = (stick.getThrottle()-1)/2;
 		robot.arcadeDrive(stick.getY()*speed, -stick.getX()*speed*.6);
+		m_base.set(cont.getLY()*.5);
+		m_arm.set(cont.getRY()*.5);
 	}
 
 	/**
