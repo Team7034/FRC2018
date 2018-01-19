@@ -14,7 +14,7 @@ public class Controller extends GenericHID {
 	}
 	
 	public final double getLY() {
-		return getRawAxis(1);
+		return (getRawAxis(1) + 1)/2;
 	}
 	
 	public final double getRX() {
