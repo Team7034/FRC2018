@@ -94,7 +94,7 @@ public class Robot extends IterativeRobot {
 		else if (cont.getB() == true) {
 			state = DoubleSolenoid.Value.kForward;
 		}
-		else ;if (cont.getXB() == true) {
+		else if (cont.getXB() == true) {
 			state = DoubleSolenoid.Value.kReverse;
 		}
 			
