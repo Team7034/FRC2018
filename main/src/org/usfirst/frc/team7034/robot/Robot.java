@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +26,9 @@ public class Robot extends IterativeRobot {
 	
 	DifferentialDrive robot;
 	Joystick stick;
+	Compressor compressor;
+	DoubleSolenoid doubleSolenoid;
+	Joystick gamepad;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -42,6 +47,13 @@ public class Robot extends IterativeRobot {
 		robot = new DifferentialDrive(left_motors, right_motors);
 		stick = new Joystick(0);
 		stick.setThrottleChannel(3);
+		
+		compressor = new Compressor(0);
+		compressor.setClosedLoopControl(true);
+		
+		doubleSolenoid = new DoubleSolenoid(0,3);
+		
+		gamepad = new Joystick(1);
 	}
 
 	/**
