@@ -111,7 +111,7 @@ public class Robot extends IterativeRobot {
 			doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
 		}
 		
-	}
+	} 
 
 	/**
 	 * This function is called periodically during test mode
