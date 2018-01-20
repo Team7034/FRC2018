@@ -89,27 +89,16 @@ public class Robot extends IterativeRobot {
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
 		DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
-		//if (cont.getA() == true) {
-		//	state = DoubleSolenoid.Value.kOff; }
-		//else if (cont.getB() == true) {
-		//	state = DoubleSolenoid.Value.kForward;
-		//}
-		//else if (cont.getXB() == true) {
-		//	state = DoubleSolenoid.Value.kReverse;
-		//}
+		if (cont.getA() == true) {
+			state = DoubleSolenoid.Value.kOff; }
+		else if (cont.getB() == true) {
+			state = DoubleSolenoid.Value.kForward;
+		}
+		else if (cont.getXB() == true) {
+			state = DoubleSolenoid.Value.kReverse;
+		}
 			
-		if (cont.getA() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
-		}
-		if (cont.getB() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kForward);
-		}
-		if (cont.getXB() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
-		}
+
 		
 	} 
 
