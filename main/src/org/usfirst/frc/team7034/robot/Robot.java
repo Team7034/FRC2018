@@ -28,7 +28,8 @@ public class Robot extends IterativeRobot {
 	Joystick stick;
 	Compressor compressor;
 	DoubleSolenoid doubleSolenoid;
-	Joystick gamepad;
+	Controller cont;
+	//Joystick gamepad;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -53,7 +54,9 @@ public class Robot extends IterativeRobot {
 		
 		doubleSolenoid = new DoubleSolenoid(0,3);
 		
-		gamepad = new Joystick(1);
+		cont = new Controller(0);
+		
+		//gamepad = new Joystick(1);
 	}
 
 	/**
@@ -85,7 +88,17 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
-		
+		DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
+		if (cont.getA() == true) {
+			state = DoubleSolenoid.Value.kOff; }
+		else if (cont.getB() == true) {
+			state = DoubleSolenoid.Value.kForward;
+		}
+		else ;if (cont.getXB() == true) {
+			state = DoubleSolenoid.Value.kReverse;
+		}
+			
+		doubleSolenoid.set(state);
 		
 	}
 
