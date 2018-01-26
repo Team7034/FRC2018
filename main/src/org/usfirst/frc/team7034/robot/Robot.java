@@ -49,10 +49,11 @@ public class Robot extends IterativeRobot {
 		stick = new Joystick(0);
 		stick.setThrottleChannel(3);
 		
-		compressor = new Compressor(0);
+		compressor = new Compressor(1);
 		compressor.setClosedLoopControl(true);
 		
-		doubleSolenoid = new DoubleSolenoid(0,3);
+		doubleSolenoid = new DoubleSolenoid(0,5);
+		doubleSolenoid.set(DoubleSolenoid.Value.kOff);
 		
 		cont = new Controller(0);
 		
@@ -118,5 +119,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		if (cont.getA() == true)
+		{
+			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
+		}
+		if (cont.getB() == true)
+		{
+			doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+		}
+		if (cont.getXB() == true)
+		{
+			doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+		}
 	}
 }
