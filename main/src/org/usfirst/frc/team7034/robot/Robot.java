@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 	Compressor compressor;
 	DoubleSolenoid doubleSolenoid;
 	Controller cont;
-	//Joystick gamepad;
+	DoubleSolenoid.Value state;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -54,10 +54,10 @@ public class Robot extends IterativeRobot {
 		
 		doubleSolenoid = new DoubleSolenoid(0,5);
 		doubleSolenoid.set(DoubleSolenoid.Value.kOff);
+
 		
 		cont = new Controller(0);
-		
-		//gamepad = new Joystick(1);
+		state = DoubleSolenoid.Value.kOff; 
 	}
 
 	/**
@@ -89,28 +89,17 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
-		DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
-		//if (cont.getA() == true) {
-		//	state = DoubleSolenoid.Value.kOff; }
-		//else if (cont.getB() == true) {
-		//	state = DoubleSolenoid.Value.kForward;
-		//}
-		//else if (cont.getXB() == true) {
-		//	state = DoubleSolenoid.Value.kReverse;
-		//}
+		//DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
+		if (cont.getA() == true) {
+			state = DoubleSolenoid.Value.kOff; }
+		else if (cont.getB() == true) {
+			state = DoubleSolenoid.Value.kForward;
+		}
+		else if (cont.getXB() == true) {
+			state = DoubleSolenoid.Value.kReverse;
+		}
 			
-		if (cont.getA() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
-		}
-		if (cont.getB() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kForward);
-		}
-		if (cont.getXB() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
-		}
+
 		
 	} 
 
