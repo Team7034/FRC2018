@@ -7,8 +7,11 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.usfirst.frc.team7034.robot.Controller;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +26,7 @@ public class Robot extends IterativeRobot {
 	Spark front_right;
 	Spark back_right;
 	
-	Spark base;
+	TalonSRX base;
 	Spark arm;
 	
 	SpeedController m_base;
@@ -50,15 +53,15 @@ public class Robot extends IterativeRobot {
 		back_right = new Spark(3);
 		right_motors = new SpeedControllerGroup(front_right, back_right);
 		
-		base = new Spark(0);
+		base = new TalonSRX(3);
 		arm = new Spark(1);
 		
-		m_base = base;
+		//m_base = base;
 		m_arm = arm;
 		
 		robot = new DifferentialDrive(left_motors, right_motors);
-		stick = new Joystick(1);
-		stick.setThrottleChannel(3);
+		//stick = new Joystick(1);
+		//stick.setThrottleChannel(3);
 		cont = new Controller(0);
 	}
 
@@ -89,10 +92,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		double speed = (stick.getThrottle()-1)/2;
-		robot.arcadeDrive(stick.getY()*speed, -stick.getX()*speed*.6);
-		m_base.set(cont.getLY());
-		m_arm.set(cont.getRY()*.45);
+		//double speed = (stick.getThrottle()-1)/2;
+		//robot.arcadeDrive(stick.getY()*speed, -stick.getX()*speed*.6);
+		base.set(ControlMode.PercentOutput, cont.getLY());
+		//m_arm.set(cont.getRY()*.45);
 	}
 
 	/**
