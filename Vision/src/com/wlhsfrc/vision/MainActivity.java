@@ -6,6 +6,7 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -20,9 +21,11 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements CvCameraViewListener2 {
 	static private final String TAG = "MainActivity";
+	private MainView mCamView;
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -50,43 +53,53 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    Log.i(TAG, "called onCreate");
-	    Camera cam = Camera.open();     
-	    Parameters p = cam.getParameters();
 	    super.onCreate(savedInstanceState);
 	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	    setContentView(R.layout.activity_main);
 	    final View contentView = findViewById(R.id.activity_main);
-	    mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.activity_main);
-	    mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-	    mOpenCvCameraView.setCvCameraViewListener(this);
-	    p.setFlashMode(Parameters.FLASH_MODE_TORCH);
-	    cam.setParameters(p);
+	    mCamView = (MainView) findViewById(R.id.activity_main);
+	    mCamView.setVisibility(SurfaceView.VISIBLE);
+	    mCamView.setCvCameraViewListener(this);
+	    mCamView.setMaxFrameSize(400, 300);
+	    mCamView.flashlightOn();
+	    
 	}
 	@Override
 	public void onPause()
 	{
 	    super.onPause();
-	    if (mOpenCvCameraView != null)
-	        mOpenCvCameraView.disableView();
+	    if (mCamView != null)
+	        mCamView.disableView();
 	}
 	public void onDestroy() {
 	    super.onDestroy();
-	    if (mOpenCvCameraView != null)
-	        mOpenCvCameraView.disableView();
+	    if (mCamView != null)
+	        mCamView.disableView();
 	}
 	public void onCameraViewStarted(int width, int height) {
 	}
 	public void onCameraViewStopped() {
 	}
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-	    return inputFrame.gray();
+		Mat view = inputFrame.gray();
+		//Mat newView = Mat.zeros(view.size(),  view.type());
+		//Toast.makeText(getApplication(), String.valueOf(view.type()), Toast.LENGTH_SHORT).show();
+		view.convertTo(view, 0, 5, -600);
+		/*for(int x = 0; x < view.cols(); x++) {
+			for(int y = 0; y < view.rows(); y++) {
+				if(x < view.cols()*.2) {
+					if(view.get(y, x)  > .8) {
+						
+					}
+				}
+			}
+		}*/
+	    return view;
 	}
 	
-private CameraBridgeViewBase mOpenCvCameraView;
 	
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 	    @Override
@@ -95,7 +108,7 @@ private CameraBridgeViewBase mOpenCvCameraView;
 	            case LoaderCallbackInterface.SUCCESS:
 	            {
 	                Log.i(TAG, "OpenCV loaded successfully");
-	                mOpenCvCameraView.enableView();
+	                mCamView.enableView();
 	            } break;
 	            default:
 	            {
