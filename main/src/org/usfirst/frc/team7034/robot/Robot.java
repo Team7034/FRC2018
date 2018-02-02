@@ -1,6 +1,7 @@
 package org.usfirst.frc.team7034.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Spark;
@@ -20,6 +21,8 @@ public class Robot extends IterativeRobot {
 	Spark back_left;	
 	Spark front_right;
 	Spark back_right;
+	PWMTalonSRX one;
+	PWMTalonSRX two;
 	
 	SpeedControllerGroup left_motors;
 	SpeedControllerGroup right_motors;
@@ -54,10 +57,12 @@ public class Robot extends IterativeRobot {
 		
 		doubleSolenoid = new DoubleSolenoid(0,5);
 		doubleSolenoid.set(DoubleSolenoid.Value.kOff);
+		one = new PWMTalonSRX(2);
+		two = new PWMTalonSRX(3);
 
 		
 		cont = new Controller(0);
-		state = DoubleSolenoid.Value.kOff; 
+		state = DoubleSolenoid.Value.kReverse; 
 	}
 
 	/**
