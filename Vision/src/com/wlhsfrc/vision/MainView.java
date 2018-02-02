@@ -21,18 +21,27 @@ public class MainView extends JavaCameraView{
 	
 	public MainView(Context context, AttributeSet atts) {
 		super(context, atts);
-		
-		mHolder = getHolder();
-		mHolder.addCallback(this);
 	}
 	
 	public void flashlightOn() {
-		mCamera = Camera.open();
+		mHolder = getHolder();
+		mHolder.addCallback(this);
+		int localCameraIndex = mCameraIndex;
+		Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        for (int camIdx = 0; camIdx < Camera.getNumberOfCameras(); ++camIdx) {
+            Camera.getCameraInfo( camIdx, cameraInfo );
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                localCameraIndex = camIdx;
+                break;
+            }
+        }
+        mCamera = Camera.open(localCameraIndex);
 		try {
 			mCamera.setPreviewDisplay(mHolder);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		//mHolder.addCallback(this);
 		Parameters params = mCamera.getParameters();
 		params.setFlashMode(Parameters.FLASH_MODE_TORCH);
 		mCamera.setParameters(params);
