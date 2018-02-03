@@ -24,9 +24,12 @@ public class Robot extends IterativeRobot {
 	Spark front_right;
 	Spark back_right;
 	
-	WPI_TalonSRX winchTalon;
+	WPI_TalonSRX winchTalonOne;
+	WPI_TalonSRX winchTalonTwo;
 	
-	SpeedController winchControl;
+	SpeedController winchControlOne;
+	SpeedController winchControlTwo;
+	SpeedControllerGroup winchControl;
 	
 	SpeedControllerGroup left_motors;
 	SpeedControllerGroup right_motors;
@@ -64,10 +67,16 @@ public class Robot extends IterativeRobot {
 		
 		cont = new Controller(0);
 		
-		winchTalon = new WPI_TalonSRX(2);
-		winchTalon.configOpenloopRamp(2.0, 200);
-		winchTalon.configClosedloopRamp(2.0,200);
-		winchControl = winchTalon;
+		winchTalonOne = new WPI_TalonSRX(2);
+		winchTalonTwo = new WPI_TalonSRX(3);
+		
+		winchTalonOne.configOpenloopRamp(2.0, 200);
+		winchTalonOne.configClosedloopRamp(2.0,200);
+		
+		winchTalonTwo.configOpenloopRamp(2.0, 200);
+		winchTalonTwo.configClosedloopRamp(2.0,200);
+		
+		winchControl = new SpeedControllerGroup(winchTalonOne, winchTalonTwo);
 	}
 
 	/**
