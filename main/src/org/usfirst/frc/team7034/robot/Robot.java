@@ -21,8 +21,6 @@ public class Robot extends IterativeRobot {
 	Spark back_left;	
 	Spark front_right;
 	Spark back_right;
-	PWMTalonSRX one;
-	PWMTalonSRX two;
 	
 	SpeedControllerGroup left_motors;
 	SpeedControllerGroup right_motors;
@@ -32,7 +30,6 @@ public class Robot extends IterativeRobot {
 	Compressor compressor;
 	DoubleSolenoid doubleSolenoid;
 	Controller cont;
-	DoubleSolenoid.Value state;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -52,17 +49,15 @@ public class Robot extends IterativeRobot {
 		stick = new Joystick(0);
 		stick.setThrottleChannel(3);
 		
-		compressor = new Compressor(1);
+		compressor = new Compressor(0);
 		compressor.setClosedLoopControl(true);
 		
 		doubleSolenoid = new DoubleSolenoid(0,5);
 		doubleSolenoid.set(DoubleSolenoid.Value.kOff);
-		one = new PWMTalonSRX(2);
-		two = new PWMTalonSRX(3);
-
+	
 		
 		cont = new Controller(0);
-		state = DoubleSolenoid.Value.kReverse; 
+		
 	}
 
 	/**
@@ -95,35 +90,28 @@ public class Robot extends IterativeRobot {
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
 		//DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
-		if (cont.getA() == true) {
-			state = DoubleSolenoid.Value.kOff; }
-		else if (cont.getB() == true) {
-			state = DoubleSolenoid.Value.kForward;
+		if (cont.getXB())
+		{
+			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
 		}
-		else if (cont.getXB() == true) {
-			state = DoubleSolenoid.Value.kReverse;
+		else if (cont.getA())
+		{
+			doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+			try { Thread.sleep(15);}
+			catch(InterruptedException e) {	}
+			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
 		}
-			
-
+		else if (cont.getB())
+		{
+			doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+		}
 		
-	} 
-
+	}
+		
 	/**
 	 * This function is called periodically during test mode
 	 */
 	@Override
 	public void testPeriodic() {
-		if (cont.getA() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
-		}
-		if (cont.getB() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kForward);
-		}
-		if (cont.getXB() == true)
-		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
-		}
 	}
 }
