@@ -100,6 +100,9 @@ public class Robot extends IterativeRobot {
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
 		//DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
+		
+		winchControl.set(cont.getRY());
+		
 		if (cont.getXB())
 		{
 			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
