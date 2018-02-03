@@ -1,13 +1,15 @@
 package org.usfirst.frc.team7034.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import org.usfirst.frc.team7034.robot.Controller;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,6 +23,10 @@ public class Robot extends IterativeRobot {
 	Spark back_left;	
 	Spark front_right;
 	Spark back_right;
+	
+	WPI_TalonSRX winchTalon;
+	
+	SpeedController winchControl;
 	
 	SpeedControllerGroup left_motors;
 	SpeedControllerGroup right_motors;
@@ -58,6 +64,10 @@ public class Robot extends IterativeRobot {
 		
 		cont = new Controller(0);
 		
+		winchTalon = new WPI_TalonSRX(2);
+		winchTalon.configOpenloopRamp(2.0, 200);
+		winchTalon.configClosedloopRamp(2.0,200);
+		winchControl = winchTalon;
 	}
 
 	/**
