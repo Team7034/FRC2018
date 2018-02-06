@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
 	DifferentialDrive robot;
 	Joystick stick;
 	Compressor compressor;
-	DoubleSolenoid doubleSolenoid;
+	MySolenoid doubleSolenoid;
 	Controller cont;
 
 	/**
@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
 		compressor = new Compressor(0);
 		compressor.setClosedLoopControl(true);
 		
-		doubleSolenoid = new DoubleSolenoid(0,1);
+		doubleSolenoid = new MySolenoid(0,1);
 		//doubleSolenoid.set(DoubleSolenoid.Value.kOff);
 
 		
@@ -90,22 +90,24 @@ public class Robot extends IterativeRobot {
 		//DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
 		if (cont.getXB())
 		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
+			doubleSolenoid.set(MySolenoid.Value.lock);
 		}
 		else if (cont.getA())
 		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+			doubleSolenoid.set(MySolenoid.Value.up);
 			try {
 				Thread.sleep(15);
-			}
-			catch(InterruptedException e) {
+			} catch(InterruptedException e) {
 				
 			}
-			doubleSolenoid.set(DoubleSolenoid.Value.kOff);
+			doubleSolenoid.set(MySolenoid.Value.lock);
 		}
 		else if (cont.getB())
 		{
-			doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+			doubleSolenoid.set(MySolenoid.Value.down);
+		}
+		else if (cont.getYB()) {
+			doubleSolenoid.set(MySolenoid.Value.vent);
 		}
 	}
 		
