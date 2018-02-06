@@ -4,9 +4,12 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import org.usfirst.frc.team7034.robot.Controller;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,13 +24,22 @@ public class Robot extends IterativeRobot {
 	Spark front_right;
 	Spark back_right;
 	
+	WPI_TalonSRX winchTalonOne;
+	WPI_TalonSRX winchTalonTwo;
+	
+	SpeedController winchControlOne;
+	SpeedController winchControlTwo;
+	SpeedControllerGroup winchControl;
+	
 	SpeedControllerGroup left_motors;
 	SpeedControllerGroup right_motors;
 	
 	DifferentialDrive robot;
 	Joystick stick;
 	Compressor compressor;
-	MySolenoid doubleSolenoid;
+
+	DoubleSolenoid mainPiston;
+	DoubleSolenoid secondaryPiston;
 	Controller cont;
 
 	/**
@@ -51,11 +63,24 @@ public class Robot extends IterativeRobot {
 		compressor = new Compressor(0);
 		compressor.setClosedLoopControl(true);
 		
-		doubleSolenoid = new MySolenoid(0,1);
-		//doubleSolenoid.set(DoubleSolenoid.Value.kOff);
-
+		mainPiston = new DoubleSolenoid(0,1);
+		mainPiston.set(DoubleSolenoid.Value.kOff);
+		
+		secondaryPiston = new DoubleSolenoid(2,3);
+		secondaryPiston.set(DoubleSolenoid.Value.kOff);
 		
 		cont = new Controller(0);
+		
+		winchTalonOne = new WPI_TalonSRX(2);
+		winchTalonTwo = new WPI_TalonSRX(3);
+		
+		winchTalonOne.configOpenloopRamp(2.0, 200);
+		winchTalonOne.configClosedloopRamp(2.0,200);
+		
+		winchTalonTwo.configOpenloopRamp(2.0, 200);
+		winchTalonTwo.configClosedloopRamp(2.0,200);
+		
+		winchControl = new SpeedControllerGroup(winchTalonOne, winchTalonTwo);
 	}
 
 	/**
@@ -88,26 +113,18 @@ public class Robot extends IterativeRobot {
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
 		//DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
+		
+		winchControl.set(cont.getRY());
+		
 		if (cont.getXB())
 		{
-			doubleSolenoid.set(MySolenoid.Value.lock);
+			mainPiston.set(DoubleSolenoid.Value.kReverse);
+			secondaryPiston.set(DoubleSolenoid.Value.kReverse);
 		}
 		else if (cont.getA())
 		{
-			doubleSolenoid.set(MySolenoid.Value.up);
-			try {
-				Thread.sleep(15);
-			} catch(InterruptedException e) {
-				
-			}
-			doubleSolenoid.set(MySolenoid.Value.lock);
-		}
-		else if (cont.getB())
-		{
-			doubleSolenoid.set(MySolenoid.Value.down);
-		}
-		else if (cont.getYB()) {
-			doubleSolenoid.set(MySolenoid.Value.vent);
+			mainPiston.set(DoubleSolenoid.Value.kForward);
+			secondaryPiston.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
 		
