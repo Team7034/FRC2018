@@ -1,8 +1,13 @@
 package org.usfirst.frc.team7034.robot;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -12,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team7034.robot.Controller;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,6 +44,10 @@ public class Robot extends IterativeRobot {
 	DifferentialDrive robot;
 	Joystick stick;
 	Controller cont;
+	
+	AHRS gyro;
+	
+	SmartDashboard dash;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -63,6 +73,13 @@ public class Robot extends IterativeRobot {
 		//stick = new Joystick(1);
 		//stick.setThrottleChannel(3);
 		cont = new Controller(0);
+		
+		dash = new SmartDashboard(); 
+		try {
+			gyro = new AHRS(I2C.Port.kOnboard);
+		} catch(RuntimeException e) {
+			DriverStation.reportError("Error Instantiating the NavX Micro: " + e.getMessage(), true);
+		}
 	}
 
 	/**
@@ -94,8 +111,13 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		//double speed = (stick.getThrottle()-1)/2;
 		//robot.arcadeDrive(stick.getY()*speed, -stick.getX()*speed*.6);
-		base.set(ControlMode.PercentOutput, cont.getLY());
+		//base.set(ControlMode.PercentOutput, cont.getLY());
 		//m_arm.set(cont.getRY()*.45);
+		//dash.putString("DB/String 0", (String)armGyro.getAngle());
+		double angle = gyro.getAngle();
+		double rate = gyro.getRate();
+		dash.putNumber("angle",  angle);
+		dash.putNumber("rate", rate);
 	}
 
 	/**
