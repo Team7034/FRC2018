@@ -53,6 +53,25 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
+	
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+	    @Override
+	    public void onManagerConnected(int status) {
+	        switch (status) {
+	            case LoaderCallbackInterface.SUCCESS:
+	            {
+	                Log.i(TAG, "OpenCV loaded successfully");
+	                mCamView.initFlash();
+	                mCamView.enableView();
+	            } break;
+	            default:
+	            {
+	                super.onManagerConnected(status);
+	            } break;
+	        }
+	    }
+	};
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    Log.i(TAG, "called onCreate");
@@ -64,7 +83,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 	    mCamView.setVisibility(SurfaceView.VISIBLE);
 	    mCamView.setCvCameraViewListener(this);
 	    mCamView.setMaxFrameSize(400, 300);
-	    mCamView.flashlightOn();
+	    //Log.i(TAG, "Before Flash Loaded");
+	    //mCamView.flashlightOn();
+	    //Log.i(TAG, "After Flash Loaded");
 	    
 	}
 	@Override
@@ -97,26 +118,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 				}
 			}
 		}*/
+		mCamView.flashlightOn();
 	    return view;
 	}
-	
-	
-	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-	    @Override
-	    public void onManagerConnected(int status) {
-	        switch (status) {
-	            case LoaderCallbackInterface.SUCCESS:
-	            {
-	                Log.i(TAG, "OpenCV loaded successfully");
-	                mCamView.enableView();
-	            } break;
-	            default:
-	            {
-	                super.onManagerConnected(status);
-	            } break;
-	        }
-	    }
-	};
 	
 	@Override
 	public void onResume()

@@ -11,6 +11,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -23,7 +24,7 @@ public class MainView extends JavaCameraView{
 		super(context, atts);
 	}
 	
-	public void flashlightOn() {
+	/*public void flashlightOn() {
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		int localCameraIndex = mCameraIndex;
@@ -46,6 +47,17 @@ public class MainView extends JavaCameraView{
 		params.setFlashMode(Parameters.FLASH_MODE_TORCH);
 		mCamera.setParameters(params);
 		mCamera.startPreview();
+	}*/
+	
+	public void initFlash() {
+		boolean foo = this.initializeCamera(400, 300);
+		Log.i(TAG, "init cam: " + foo);
 	}
 	
+	public void flashlightOn() {
+		Parameters params = this.mCamera.getParameters();
+		params.setFlashMode(Parameters.FLASH_MODE_TORCH);
+		this.mCamera.setParameters(params);
+		this.mCamera.startPreview();
+	}
 }
