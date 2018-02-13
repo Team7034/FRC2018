@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot {
 		right_motors = new SpeedControllerGroup(front_right, back_right);
 		
 		base = new TalonSRX(3);
-		arm = new Spark(1);
+		arm = new Spark(0);
 		
 		//m_base = base;
 		m_arm = arm;
@@ -118,6 +118,9 @@ public class Robot extends IterativeRobot {
 		double rate = gyro.getRate();
 		dash.putNumber("angle",  angle);
 		dash.putNumber("rate", rate);
+		if(angle != 0) {
+			//m_arm.set(rate);
+		}
 	}
 
 	/**
