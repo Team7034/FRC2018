@@ -119,7 +119,10 @@ public class Robot extends IterativeRobot {
 		dash.putNumber("angle",  angle);
 		dash.putNumber("rate", rate);
 		if(angle != 0) {
-			//m_arm.set(rate);
+			m_arm.set(.6);
+		}
+		else {
+			m_arm.set(.3);
 		}
 	}
 
