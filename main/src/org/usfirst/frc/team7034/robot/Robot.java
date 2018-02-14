@@ -1,7 +1,5 @@
 package org.usfirst.frc.team7034.robot;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -12,11 +10,15 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.usfirst.frc.team7034.robot.Controller;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 /**
@@ -37,6 +39,13 @@ public class Robot extends IterativeRobot {
 	
 	SpeedController m_base;
 	SpeedController m_arm;
+
+	WPI_TalonSRX winchTalonOne;
+	WPI_TalonSRX winchTalonTwo;
+	
+	SpeedController winchControlOne;
+	SpeedController winchControlTwo;
+	SpeedControllerGroup winchControl;
 	
 	SpeedControllerGroup left_motors;
 	SpeedControllerGroup right_motors;
@@ -48,6 +57,10 @@ public class Robot extends IterativeRobot {
 	AHRS gyro;
 	
 	SmartDashboard dash;
+	Compressor compressor;
+
+	DoubleSolenoid mainPiston;
+	DoubleSolenoid secondaryPiston;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -80,6 +93,28 @@ public class Robot extends IterativeRobot {
 		} catch(RuntimeException e) {
 			DriverStation.reportError("Error Instantiating the NavX Micro: " + e.getMessage(), true);
 		}
+		stick = new Joystick(1);
+		stick.setThrottleChannel(3);
+		
+		compressor = new Compressor(0);
+		compressor.setClosedLoopControl(true);
+		
+		mainPiston = new DoubleSolenoid(0,1);
+		mainPiston.set(DoubleSolenoid.Value.kOff);
+		
+		secondaryPiston = new DoubleSolenoid(2,3);
+		secondaryPiston.set(DoubleSolenoid.Value.kOff);
+		
+		winchTalonOne = new WPI_TalonSRX(2);
+		winchTalonTwo = new WPI_TalonSRX(3);
+		
+		winchTalonOne.configOpenloopRamp(2.0, 200);
+		winchTalonOne.configClosedloopRamp(2.0,200);
+		
+		winchTalonTwo.configOpenloopRamp(2.0, 200);
+		winchTalonTwo.configClosedloopRamp(2.0,200);
+		
+		winchControl = new SpeedControllerGroup(winchTalonOne, winchTalonTwo);
 	}
 
 	/**
@@ -103,17 +138,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 	}
-
+ 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//double speed = (stick.getThrottle()-1)/2;
-		//robot.arcadeDrive(stick.getY()*speed, -stick.getX()*speed*.6);
-		//base.set(ControlMode.PercentOutput, cont.getLY());
-		//m_arm.set(cont.getRY()*.45);
-		//dash.putString("DB/String 0", (String)armGyro.getAngle());
 		double angle = gyro.getAngle();
 		double rate = gyro.getRate();
 		dash.putNumber("angle",  angle);
@@ -124,8 +154,24 @@ public class Robot extends IterativeRobot {
 		else {
 			m_arm.set(.3);
 		}
+		double speed = ((stick.getThrottle()+1)/2);
+		robot.arcadeDrive(-stick.getY()*speed, stick.getX()*speed);
+		//DoubleSolenoid.Value state = DoubleSolenoid.Value.kOff;
+		
+		winchControl.set(cont.getRY());
+		
+		if (cont.getXB())
+		{
+			mainPiston.set(DoubleSolenoid.Value.kReverse);
+			secondaryPiston.set(DoubleSolenoid.Value.kReverse);
+		}
+		else if (cont.getA())
+		{
+			mainPiston.set(DoubleSolenoid.Value.kForward);
+			secondaryPiston.set(DoubleSolenoid.Value.kReverse);
+		}
 	}
-
+		
 	/**
 	 * This function is called periodically during test mode
 	 */
@@ -133,4 +179,3 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 	}
 }
-
