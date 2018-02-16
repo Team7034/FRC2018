@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
@@ -20,6 +21,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team7034.robot.Controller;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -56,11 +58,15 @@ public class Robot extends IterativeRobot {
 	
 	AHRS gyro;
 	
+	AHRS navX;
+	
 	SmartDashboard dash;
 	Compressor compressor;
 
 	DoubleSolenoid mainPiston;
 	DoubleSolenoid secondaryPiston;
+	
+	DriverStation ds;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -68,6 +74,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		ds = DriverStation.getInstance();
+		
 		front_left = new Spark(4);
 		back_left = new Spark(5);
 		left_motors = new SpeedControllerGroup(front_left, back_left);
@@ -115,6 +123,8 @@ public class Robot extends IterativeRobot {
 		winchTalonTwo.configClosedloopRamp(2.0,200);
 		
 		winchControl = new SpeedControllerGroup(winchTalonOne, winchTalonTwo);
+		
+		navX = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, new Byte((byte) 23));
 	}
 
 	/**
@@ -137,6 +147,31 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+	/**	
+		if (cont.getYB())
+		{
+			robot.arcadeDrive(0,0);
+		}
+		
+		 int totalDisplacement = 0;
+		 if (totalDisplacement < 12)
+		  {
+		  	navX.resetDisplacement();
+		   robot.arcadeDrive(-0.35, 0.35);
+		  	totalDisplacement += navX.getDisplacementX();
+		  }
+		  else if (totalDisplacement >= 12)
+		  {
+		  	robot.arcadeDrive(0,0);
+		  }
+		  
+		  */
+		 /**
+		String gameMessage = ds.getGameSpecificMessage();
+		
+		if (gameMessage.equalsIgnoreCase("RBB") || gameMessage.equalsIgnoreCase("RRB");
+		
+	*/	 
 	}
  
 	/**

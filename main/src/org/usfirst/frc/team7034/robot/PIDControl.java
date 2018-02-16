@@ -1,5 +1,9 @@
 package org.usfirst.frc.team7034.robot;
 import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.SerialDataType;
+
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class PIDControl {
 	
@@ -28,7 +32,8 @@ public class PIDControl {
 		i = iGain * iErr;
 		d = dGain * dErr;
 		
-		//navX = new AHRS(0,10);
+		navX = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, new Byte((byte) 10));
+		navX.getDisplacementX();
 	}
 	
 	// @override
@@ -41,13 +46,11 @@ public class PIDControl {
 	
 	public double getVelocity()
 	{
-		aNought = 
+		double aNought = navX.getRawAccelX();
 		
-		try {
-			Thread.sleep(100);
-			
-		}
-		catch { (InterruptedException e) }
+		double aFinal = navX.getRawAccelX();
+		
+		double time = 0.1; //in seconds between refresh
 		
 		return 0;
 	}
