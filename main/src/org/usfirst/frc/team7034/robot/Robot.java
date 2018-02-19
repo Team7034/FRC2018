@@ -23,6 +23,8 @@ import org.usfirst.frc.team7034.robot.Controller;
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
+import edu.wpi.first.wpilibj.PIDController;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -58,7 +60,9 @@ public class Robot extends IterativeRobot {
 	
 	AHRS gyro;
 	
-	AHRS navX;
+	PIDController PIDControl;
+	
+	//AHRS navX;
 	
 	SmartDashboard dash;
 	Compressor compressor;
@@ -124,7 +128,8 @@ public class Robot extends IterativeRobot {
 		
 		winchControl = new SpeedControllerGroup(winchTalonOne, winchTalonTwo);
 		
-		navX = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, new Byte((byte) 23));
+		PIDControl = new PIDController(0.025,0.025,0.025,0.002, gyro, )
+		//navX = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, new Byte((byte) 23));
 	}
 
 	/**
