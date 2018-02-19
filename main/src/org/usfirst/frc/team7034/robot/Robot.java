@@ -62,6 +62,9 @@ public class Robot extends IterativeRobot {
 	Compressor compressor;
 	DoubleSolenoid mainPiston;
 	DoubleSolenoid secondaryPiston;
+	
+	//pid
+	PIDController PIDControl;
 
 	//misc
 	SmartDashboard dash;
@@ -109,7 +112,12 @@ public class Robot extends IterativeRobot {
 		} catch(RuntimeException e) {
 			DriverStation.reportError("Error Instantiating the NavX Micro: " + e.getMessage(), true);
 		}
-		//pid = new PIDController(.05,.05,.05);
+		//pid
+		
+		PIDControl = new PIDController(0.025,0.025,0.025,0.025, gyro, arm);
+		PIDControl.setOutputRange(-0.01, 0.6);
+		gyro.reset(); //sets start angle to 0
+		//PIDControl.setSetpoint(gyro.getAngle()+90); //sets target angle to 90
 		
 		//pneumatics
 		compressor = new Compressor(0);
@@ -122,6 +130,7 @@ public class Robot extends IterativeRobot {
 		
 		//misc
 		dash = new SmartDashboard(); 
+
 	}
 
 	/**
@@ -177,6 +186,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//update sensor values
+			
 		double angle = gyro.getAngle();
 		double rate = gyro.getRate();
 		double angle2 = gyro.getPitch();
@@ -195,6 +205,23 @@ public class Robot extends IterativeRobot {
 		//drive
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(stick.getY()*speed, stick.getX()*speed);
+		
+		//PID arm
+		
+		PIDControl.setSetpoint(0);
+		
+		if (!manual)
+		{
+			PIDControl.setSetpoint(gyro.getAngle());
+			PIDControl.enable();
+		}
+		else
+			PIDControl.disable();
+		
+		if (PIDControl.isEnabled())
+		{
+			arm.set(PIDControl.get());
+		}
 		
 		//arm
 		if(!manual && angle2 >= 0) {	//hold arm in place with gyro.
