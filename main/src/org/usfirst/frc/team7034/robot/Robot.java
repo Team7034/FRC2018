@@ -175,7 +175,7 @@ public class Robot extends IterativeRobot {
 		robot.arcadeDrive(stick.getY()*speed, stick.getX()*speed);
 		
 		//arm
-		if(!manual && angle >= 0) {	//hold arm in place with gyro
+		if(!manual && angle >= 0) {	//hold arm in place with gyro.
 			arm.set(speed*angle/90);
 		}
 		else if (!manual && angle < 0) {
