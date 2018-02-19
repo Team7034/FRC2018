@@ -75,7 +75,36 @@ public class Controller extends GenericHID {
 	}
 	
 	//dpad
-	
+	public final boolean getDPAD(String dir) {
+		int val = getPOV(0);
+		if (dir == "up" && val == 0) {
+			return true;
+		}
+		else if(dir == "upr" && val == 45) {
+			return true;
+		}
+		else if(dir == "right" && val == 90) {
+			return true;
+		}
+		else if(dir == "downr" && val == 135) {
+			return true;
+		}
+		else if(dir == "down" && val == 180) {
+			return true;
+		}
+		else if(dir == "downl" && val == 225) {
+			return true;
+		}
+		else if(dir == "left" && val == 270) {
+			return true;
+		}
+		else if(dir == "upl" && val == 310) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	
 	@Deprecated
 	public double getX(Hand hand) {
