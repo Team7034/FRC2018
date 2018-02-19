@@ -213,10 +213,12 @@ public class Robot extends IterativeRobot {
 		
 		//PID arm
 		
+		PIDControl.setSetpoint(0);
+		
 		if (!manual)
 		{
 			PIDControl.setSetpoint(gyro.getAngle());
-			//PIDControl.enable();
+			PIDControl.enable();
 		}
 		else
 			PIDControl.disable();
