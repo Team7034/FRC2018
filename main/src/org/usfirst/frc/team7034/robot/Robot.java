@@ -23,6 +23,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team7034.robot.Controller;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.SerialDataType;
+
+import edu.wpi.first.wpilibj.PIDController;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -65,7 +68,7 @@ public class Robot extends IterativeRobot {
 	Compressor compressor;
 	DoubleSolenoid mainPiston;
 	DoubleSolenoid secondaryPiston;
-	
+
 	//misc
 	SmartDashboard dash;
 	boolean manual = true;
@@ -125,7 +128,6 @@ public class Robot extends IterativeRobot {
 		
 		//misc
 		dash = new SmartDashboard(); 
-		
 	}
 
 	/**
@@ -148,6 +150,31 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+	/**	
+		if (cont.getYB())
+		{
+			robot.arcadeDrive(0,0);
+		}
+		
+		 int totalDisplacement = 0;
+		 if (totalDisplacement < 12)
+		  {
+		  	navX.resetDisplacement();
+		   robot.arcadeDrive(-0.35, 0.35);
+		  	totalDisplacement += navX.getDisplacementX();
+		  }
+		  else if (totalDisplacement >= 12)
+		  {
+		  	robot.arcadeDrive(0,0);
+		  }
+		  
+		  */
+		 /**
+		String gameMessage = ds.getGameSpecificMessage();
+		
+		if (gameMessage.equalsIgnoreCase("RBB") || gameMessage.equalsIgnoreCase("RRB");
+		
+	*/	 
 	}
  
 	/**
