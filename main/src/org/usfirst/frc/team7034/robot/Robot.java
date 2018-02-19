@@ -128,7 +128,8 @@ public class Robot extends IterativeRobot {
 		
 		winchControl = new SpeedControllerGroup(winchTalonOne, winchTalonTwo);
 		
-		PIDControl = new PIDController(0.025,0.025,0.025,0.002, gyro, )
+		PIDControl = new PIDController(0.025,0.025,0.025,0.002, gyro, m_arm);
+		PIDControl.setOutputRange(0.0, 0.6);
 		//navX = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, new Byte((byte) 23));
 	}
 
