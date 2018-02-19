@@ -1,8 +1,6 @@
 package org.usfirst.frc.team7034.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
@@ -10,15 +8,11 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.usfirst.frc.team7034.robot.Controller;
 
@@ -186,6 +180,7 @@ public class Robot extends IterativeRobot {
 		double angle = gyro.getAngle();
 		double rate = gyro.getRate();
 		double angle2 = gyro.getPitch();
+		angle2 = angle2 + 90;
 		double rate2 = gyro.getRawGyroX();
 		double arm_power = .8*-cont.getRY();
 		//check to see if arm is in manual control mode
@@ -198,15 +193,15 @@ public class Robot extends IterativeRobot {
 		
 		
 		//drive
-		double speed = ((stick.getThrottle()+1)/4);
+		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(stick.getY()*speed, stick.getX()*speed);
 		
 		//arm
-		if(!manual && angle >= 0) {	//hold arm in place with gyro.
-			arm.set(speed*angle/90);
+		if(!manual && angle2 >= 0) {	//hold arm in place with gyro.
+			arm.set(speed*angle2/90);
 		}
-		else if (!manual && angle < 0) {
-			arm.set(speed*angle/360);
+		else if (!manual && angle2 < 0) {
+			arm.set(speed*angle2/180);
 		}
 		else if (manual) {
 			arm.set(speed-cont.getRY());
