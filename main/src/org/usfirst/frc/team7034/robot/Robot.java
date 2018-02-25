@@ -190,7 +190,7 @@ public class Robot extends IterativeRobot {
 		if (!completed)
 		{
 		String gameMessage = ds.getGameSpecificMessage();
-			if (gameMessage.charAt(0) == 'L')
+			if (gameMessage.charAt(0) == 'R') //only works right if starting on right side
 			{
 				//left auto code here
 				
