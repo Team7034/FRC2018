@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.I2C;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -186,7 +187,18 @@ public class Robot extends IterativeRobot {
 	
 		if (!completed)
 		{
-		String gameMessage = ds.getGameSpecificMessage();
+			String gameMessage;
+			
+			try {
+				gameMessage = ds.getGameSpecificMessage();
+			}
+			catch (NullPointerException e)
+			{
+				goForward(12);
+				completed = true;
+			}
+			if (gameMessage != null)
+			{
 			if (gameMessage.charAt(0) == 'R') //only works right if starting on right side
 			{
 				//left auto code here
@@ -215,6 +227,7 @@ public class Robot extends IterativeRobot {
 				completed = true;
 			}	
 		}	 
+	}
 	}
 	
 	public void goForward(int feet)
