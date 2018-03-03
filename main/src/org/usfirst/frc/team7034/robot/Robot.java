@@ -195,6 +195,17 @@ public class Robot extends IterativeRobot {
 			catch (NullPointerException e)
 			{
 				goForward(12);
+				
+				autoPID.enable();
+				
+				while(navX.getAngle() != -25)
+				{
+				right_motors.set(autoPID.get());
+				left_motors.set(-autoPID.get());
+				}
+				
+				autoPID.disable();
+					
 				completed = true;
 			}
 			if (gameMessage != null)
