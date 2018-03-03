@@ -213,14 +213,8 @@ public class Robot extends IterativeRobot {
 				goForward(6);
 				
 				completed = true;
-			}
-			
-			
-		}
-		
-		
-		
-			 
+			}	
+		}	 
 	}
 	
 	public void goForward(int feet)
@@ -318,26 +312,6 @@ public class Robot extends IterativeRobot {
 		else if(winch_power < -1) {
 			winch_power = -1;
 		}
-		
-		/*if (cont.getRB()) {		//run winch with set power when right bumper held
-			winch_motors.set(winch_power);
-		}
-		else {
-			winch_motors.set(0);
-		}*/
-		//old winch code
-		/*if(cont.getRY() < 0)
-		 {
-			 if(cont.getLB())
-			 winchControl.set(0.5 * cont.getRY());
-			 else
-		     winchControl.set(0.5 * cont.getRY());
-				 
-		 }
-		 if(cont.getRB())
-		 {
-			 winchControl.set(0.25*Math.abs(cont.getLY()));
-		 }*/
 		
 		//pneumatics
 		if (cont.getB())	//B = down
