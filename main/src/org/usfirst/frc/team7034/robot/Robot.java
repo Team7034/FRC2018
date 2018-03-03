@@ -1,6 +1,7 @@
 package org.usfirst.frc.team7034.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
@@ -42,6 +43,7 @@ public class Robot extends IterativeRobot {
 	Spark arm;
 	Spark end_affecter;
 	PIDController pid;
+	Encoder enc;
 	
 	//winch
 	WPI_TalonSRX winch_one;
@@ -89,9 +91,10 @@ public class Robot extends IterativeRobot {
 		//arm
 		arm = new Spark(4);
 		end_affecter = new Spark(5);
+		enc = new Encoder(0,1);
 		
 		//winch
-		winch_one = new WPI_TalonSRX(2);
+		/*winch_one = new WPI_TalonSRX(2);
 		winch_two = new WPI_TalonSRX(3);
 		
 		winch_one.configOpenloopRamp(2.0, 200);
@@ -99,7 +102,7 @@ public class Robot extends IterativeRobot {
 		winch_two.configOpenloopRamp(2.0, 200);
 		winch_two.configClosedloopRamp(0.8,200);
 		
-		winch_motors = new SpeedControllerGroup(winch_one, winch_two);
+		winch_motors = new SpeedControllerGroup(winch_one, winch_two);*/
 		
 		//controllers
 		cont = new Controller(0);
@@ -186,7 +189,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//update sensor values
-			
+		double pidval = 0;
 		double angle = gyro.getAngle();
 		double rate = gyro.getRate();
 		double angle2 = gyro.getPitch();
@@ -205,6 +208,7 @@ public class Robot extends IterativeRobot {
 		//drive
 		double speed = ((stick.getThrottle()+1)/2);
 		robot.arcadeDrive(stick.getY()*speed, stick.getX()*speed);
+	
 		
 		//PID arm
 		
@@ -212,19 +216,20 @@ public class Robot extends IterativeRobot {
 		
 		if (!manual)
 		{
-			PIDControl.setSetpoint(gyro.getAngle());
 			PIDControl.enable();
 		}
-		else
+		else {
 			PIDControl.disable();
-		
+			arm.set(-speed);
+		}
 		if (PIDControl.isEnabled())
 		{
-			arm.set(PIDControl.get());
+			//arm.set(PIDControl.get());
+			pidval = PIDControl.get();
 		}
 		
 		//arm
-		if(!manual && angle2 >= 0) {	//hold arm in place with gyro.
+		/*if(!manual && angle2 >= 0) {	//hold arm in place with gyro.
 			arm.set(speed*angle2/90);
 		}
 		else if (!manual && angle2 < 0) {
@@ -232,11 +237,11 @@ public class Robot extends IterativeRobot {
 		}
 		else if (manual) {
 			arm.set(speed-cont.getRY());
-		}
+		}*/
 		
 		//end affecter
 		if(manual) {
-			end_affecter.set(cont.getLY());
+			end_affecter.set(1/8*(cont.getLY()));
 		}
 		else {
 			end_affecter.set(0);
@@ -262,12 +267,12 @@ public class Robot extends IterativeRobot {
 			winch_power = -1;
 		}
 		
-		if (cont.getRB()) {		//run winch with set power when right bumper held
+		/*if (cont.getRB()) {		//run winch with set power when right bumper held
 			winch_motors.set(winch_power);
 		}
 		else {
 			winch_motors.set(0);
-		}
+		}*/
 		//old winch code
 		/*if(cont.getRY() < 0)
 		 {
@@ -310,10 +315,9 @@ public class Robot extends IterativeRobot {
 		//send info to dashboard
 		dash.putNumber("angle",  angle);
 		dash.putNumber("rate", rate);
-		dash.putNumber("angle2",  angle2);
-		dash.putNumber("rate2", rate2);
+		dash.putNumber("encRate",  enc.get());
 		dash.putNumber("speed",  speed);
-		dash.putNumber("sppedjoy", speed-cont.getRY());
+		dash.putNumber("pidval", pidval);
 		dash.putNumber("power",  winch_power);
 		dash.putNumber("arm power", arm_power);
 		dash.putBoolean("manual arm", manual);
