@@ -59,6 +59,7 @@ public class Robot extends IterativeRobot {
 	
 	//sensors
 	AHRS gyro;
+	AHRS navX;
 	
 	//pneumatics
 	Compressor compressor;
@@ -67,10 +68,14 @@ public class Robot extends IterativeRobot {
 	
 	//pid
 	PIDController PIDControl;
+	PIDController autoPID;
 
 	//misc
 	SmartDashboard dash;
 	boolean manual = true;
+	
+	DriverStation ds;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -110,6 +115,9 @@ public class Robot extends IterativeRobot {
 		stick.setThrottleChannel(3);
 		
 		//sensors
+		
+		navX = new AHRS(I2C.Port.kMXP);
+		
 		try {
 			gyro = new AHRS(SerialPort.Port.kUSB);
 		} catch(RuntimeException e) {
@@ -121,6 +129,13 @@ public class Robot extends IterativeRobot {
 		PIDControl.setOutputRange(-0.01, 0.6);
 		gyro.reset(); //sets start angle to 0
 		//PIDControl.setSetpoint(gyro.getAngle()+90); //sets target angle to 90
+		
+		autoPID = new PIDController(0.025,0.025,0.025,0.025, navX, right_motors);
+		autoPID.setOutputRange(-1,1);
+		navX.reset(); //sets start angle to 0;
+		autoPID.setSetpoint(navX.getAngle()-90); //sets target angle 90 degrees to the left
+		
+		
 		
 		//pneumatics
 		compressor = new Compressor(0);
@@ -156,31 +171,68 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-	/**	
-		if (cont.getYB())
+		
+		boolean completed = false;
+		
+		//Relevant note:
+		// 
+		//
+		//
+		//
+		//This code assumes you are starting on the right most position at the beginning of the match
+		//
+		//
+		//
+	
+		if (!completed)
 		{
-			robot.arcadeDrive(0,0);
+		String gameMessage = ds.getGameSpecificMessage();
+			if (gameMessage.charAt(0) == 'R') //only works right if starting on right side
+			{
+				//left auto code here
+				
+				goForward(12);
+				
+				completed = true;
+			}
+			else
+			{
+				//right auto code here
+				
+				goForward(6);
+				autoPID.enable();
+				
+				while(navX.getAngle() != -90)
+				{
+				right_motors.set(autoPID.get());
+				left_motors.set(-autoPID.get());
+				}
+				
+				autoPID.disable();
+				
+				goForward(6);
+				
+				completed = true;
+			}
+			
+			
 		}
 		
-		 int totalDisplacement = 0;
-		 if (totalDisplacement < 12)
-		  {
-		  	navX.resetDisplacement();
-		   robot.arcadeDrive(-0.35, 0.35);
-		  	totalDisplacement += navX.getDisplacementX();
-		  }
-		  else if (totalDisplacement >= 12)
-		  {
-		  	robot.arcadeDrive(0,0);
-		  }
-		  
-		  */
-		 /**
-		String gameMessage = ds.getGameSpecificMessage();
 		
-		if (gameMessage.equalsIgnoreCase("RBB") || gameMessage.equalsIgnoreCase("RRB");
 		
-	*/	 
+			 
+	}
+	
+	public void goForward(int feet)
+	{
+		int displacement = 0;
+		while(displacement < feet)
+		{
+			robot.arcadeDrive(-0.35, 0.35);
+		}
+		
+		robot.arcadeDrive(0, 0);
+		return;
 	}
  
 	/**
