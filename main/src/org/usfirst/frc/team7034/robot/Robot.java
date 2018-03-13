@@ -327,7 +327,7 @@ public class Robot extends IterativeRobot {
 				arm.set(armPower);
 			}
 			
-			
+			//test
 			/*
 			PIDControl.disable();
 			if(stick.getRawButton(11)) //reversed 
