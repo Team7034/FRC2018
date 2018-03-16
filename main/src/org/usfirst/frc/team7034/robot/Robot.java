@@ -275,6 +275,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		
+		
 		if (cont.getLB()) //left bumper button dumps a cube then returns arm to normal position
 		{
 			mainPiston.set(DoubleSolenoid.Value.kForward);
