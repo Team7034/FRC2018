@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.PIDController;
  * functions corresponding to each mode, as described in the IterativeRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
- * directory.
+ * directory. The past tense of Yeet is Yate. Not Yote. That's just wrong in so many ways. 
  */
 public class Robot extends IterativeRobot {	
 	//drive
@@ -49,6 +49,7 @@ public class Robot extends IterativeRobot {
 	PIDController pid;
 	Encoder enc;
 	
+	/*
 	//winch
 	WPI_TalonSRX winch_one;
 	WPI_TalonSRX winch_two;
@@ -56,6 +57,7 @@ public class Robot extends IterativeRobot {
 	
 	float winch_power = 0;
 	boolean winch_disabled = false;
+*/
 	
 	//controllers
 	Joystick stick;
@@ -63,8 +65,8 @@ public class Robot extends IterativeRobot {
 	//Controller cont2;
 	
 	//sensors
-	AHRS gyro;
-	AHRS navX;
+	//AHRS gyro;
+	//AHRS navX;
 	
 	//pneumatics
 	Compressor compressor;
@@ -72,9 +74,9 @@ public class Robot extends IterativeRobot {
 	DoubleSolenoid secondaryPiston;
 	
 	//pid
-	double gyroInit = 0;
-	PIDController PIDControl;
-	PIDController autoPID;
+	//double gyroInit = 0;
+	//PIDController PIDControl;
+	//PIDController autoPID;
 
 	//misc
 	SmartDashboard dash;
@@ -108,23 +110,23 @@ public class Robot extends IterativeRobot {
 		robot = new DifferentialDrive(left_motors, right_motors);
 		
 		//arm
-		arm = new Spark(4);
-		end_affecter = new Spark(5);
-		enc = new Encoder(0,1);
-		enc.reset();
+		arm = new Spark(5);
+		//end_affecter = new Spark(5);
+		//enc = new Encoder(0,1);
+		//enc.reset();
 		
 		//winch 
-		
+	/*	
 		winch_one = new WPI_TalonSRX(1);
 		winch_two = new WPI_TalonSRX(2);
-		
+		*/
 		/*winch_one.configOpenloopRamp(2.0, 200);
 		winch_one.configClosedloopRamp(0.8,200);
 		winch_two.configOpenloopRamp(2.0, 200);
-		winch_two.configClosedloopRamp(0.8,200);*/
+		winch_two.configClosedloopRamp(0.8,200);
 		
 		winch_motors = new SpeedControllerGroup(winch_one, winch_two);
-		
+*/		
 		//controllers
 		cont = new Controller(0);
 		//cont2 = new Controller(2);
@@ -133,27 +135,27 @@ public class Robot extends IterativeRobot {
 		
 		//sensors
 		
-		navX = new AHRS(I2C.Port.kMXP);
+		//navX = new AHRS(I2C.Port.kMXP);
 		
-		
+	/*	
 		try {
 			gyro = new AHRS(SerialPort.Port.kUSB);
 		} catch(RuntimeException e) {
 			DriverStation.reportError("Error Instantiating the NavX Micro: " + e.getMessage(), true);
 		}
-		
+		*/
 		//pid
 		
-		PIDControl = new PIDController(0.025,0.025,0.025,0.025, gyro, arm);
-		PIDControl.setOutputRange(-0.01, 0.6);
-		gyro.reset(); //sets start angle to 0
-		PIDControl.setSetpoint(gyro.getAngle()+90); //sets target angle to 90
-		gyroInit = gyro.getRoll();
+		//PIDControl = new PIDController(0.025,0.025,0.025,0.025, gyro, arm);
+		//PIDControl.setOutputRange(-0.01, 0.6);
+		//gyro.reset(); //sets start angle to 0
+		//PIDControl.setSetpoint(gyro.getAngle()+90); //sets target angle to 90
+		//gyroInit = gyro.getRoll();
 		
-		autoPID = new PIDController(0.025,0.025,0.025,0.025, navX, right_motors);
-		autoPID.setOutputRange(-1,1);
-		navX.reset(); //sets start angle to 0;
-		autoPID.setSetpoint(navX.getAngle()-90); //sets target angle 90 degrees to the left
+		//autoPID = new PIDController(0.025,0.025,0.025,0.025, navX, right_motors);
+		//autoPID.setOutputRange(-1,1);
+		//navX.reset(); //sets start angle to 0;
+		//autoPID.setSetpoint(navX.getAngle()-90); //sets target angle 90 degrees to the left
 		
 		
 		
@@ -169,6 +171,7 @@ public class Robot extends IterativeRobot {
 		
 		//misc
 		dash = new SmartDashboard(); 
+		armPower = 0;
 
 	}
 
@@ -209,11 +212,11 @@ public class Robot extends IterativeRobot {
 	//left_motors.set(.85);
 	//right_motors.set(-.85);
 	*/
-	
-	 if (timer.get() > 10000 && timer.get() < 11500)	 
+		dash.putNumber("timer time", timer.get());
+		
+	 if (timer.get() > 10.000 && timer.get() < 11.500)	 
 	 	robot.arcadeDrive(-.85,0);
-	  else
-	 	timer.stop();
+	 
 	
 	}
 	/**
@@ -223,7 +226,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		
 		//update sensor values
-		
+		/*
 		double pidval = 0;
 		double angle = gyro.getAngle();
 		double rate = gyro.getRate();
@@ -233,50 +236,72 @@ public class Robot extends IterativeRobot {
 		double arm_power = .8*-cont.getRY();
 		double navXAngle = navX.getAngle();
 		boolean slowMo = false;
-		
+		*/
+	
 		//check to see if arm is in manual control mode && slow mode
 		if (cont.getStart())
 			manual = true;
 		else if (cont.getBack()) 
 			manual = false;
-		if(stick.getRawButton(8))
-			slowMo = true;
-		else if(stick.getRawButton(7))
-			slowMo = false;
-		
+		if(stick.getRawButton(8)) {}
+			//slowMo = true;
+		else if(stick.getRawButton(7)) {}
+			//slowMo = false;
+
 		//drive
 		double speed = ((stick.getThrottle()+1)/2);
 		//double speed = stick.getThrottle();
-		if(slowMo)
-			robot.arcadeDrive(stick.getY()*.6, stick.getX()*.6);
-		else 
-			robot.arcadeDrive(stick.getY(), stick.getX());
-		
+		//if(slowMo)
+			//robot.arcadeDrive(stick.getY()*.6, stick.getX()*.6);
+		//else 
+			robot.arcadeDrive(-stick.getY(), stick.getX());
+	
 		
 				
 		//driver-aid buttons
 		
 		if (cont.getYB()) //collapses pneumatics and holds arm locked up for CLIMBING
 		{
+			arm.set(.3); //driver controls arm automatically in reverse 
+			try {
+				Thread.sleep(450);
+			}catch(InterruptedException e) {
+			}
+			arm.set(0);
+			armPower = 0;
 			mainPiston.set(DoubleSolenoid.Value.kReverse);
 			secondaryPiston.set(DoubleSolenoid.Value.kReverse);
-			arm.set(speed * .4); //driver controls arm automatically in reverse 
+			
 		}
 		
 		
-		if (cont.getLSB()) //left bumper button dumps a cube then returns arm to normal position
+		if (cont.getLB()) //left bumper button dumps a cube then returns arm to normal position
 		{
-			arm.set(-.3);
+			mainPiston.set(DoubleSolenoid.Value.kForward);
+			secondaryPiston.set(DoubleSolenoid.Value.kForward);
 			try { 
-				Thread.sleep(250);
+				Thread.sleep(1000);
 			}catch(InterruptedException e) {
 			
 			}
-			arm.set(0);
+			mainPiston.set(DoubleSolenoid.Value.kReverse);
+			secondaryPiston.set(DoubleSolenoid.Value.kReverse);
 		}
 		
-		
-		
+		if (cont.getLT() > 0.5)
+		{
+			mainPiston.set(DoubleSolenoid.Value.kForward);
+			secondaryPiston.set(DoubleSolenoid.Value.kForward);
+			try { 
+				Thread.sleep(750);
+			}catch(InterruptedException e) {}
+			arm.set(-.3);
+			try { 
+				Thread.sleep(1000);
+			}catch(InterruptedException e) {}
+			arm.set(0);
+			armPower = 0;
+		}
 		
 		
 		
@@ -305,25 +330,29 @@ public class Robot extends IterativeRobot {
 		
 		//PID arm
 		
-		PIDControl.setSetpoint(0);
+		//PIDControl.setSetpoint(0);
 		
 		if (!manual)
 		{
 			//PIDControl.enable();
-			arm.set(limit(Pval*(gyroInit - gyro.getRoll())));
+		//	arm.set(limit(Pval*(gyroInit - gyro.getRoll())));
 		}
 		else {
 			
 			
-			PIDControl.disable();
+			//PIDControl.disable();
+			
+		
 			if (stick.getRawButton(11)) //reversed
 			{
 				armPower += cont.getRY() * 1;
 				arm.set(armPower);
 			}
+			else if (cont.getRT() > 0.5)
+				 { armPower = 0; }
 			else
 			{
-				armPower += cont.getRY() * -1;
+				armPower += (int) (cont.getRY())/100.0 * -1;
 				arm.set(armPower);
 			}
 			
@@ -337,12 +366,13 @@ public class Robot extends IterativeRobot {
 			//arm.set(speed*0.8);
 		*/
 		}
+		/*
 		if (PIDControl.isEnabled())
 		{
 			//arm.set(PIDControl.get());
 			//pidval = PIDControl.get();
 		}
-		
+		*/
 		/*
 		//arm
 		if(!manual && angle2 >= 0) {	//hold arm in place with gyro.
@@ -355,7 +385,7 @@ public class Robot extends IterativeRobot {
 			arm.set(speed-cont.getRY());
 		}
 		*/
-		
+		/*
 		//end affecter
 		if(manual) {
 			if (enc.getDistance() > -2400 && enc.getDistance() <= 0)
@@ -365,8 +395,8 @@ public class Robot extends IterativeRobot {
 			else if (enc.getDistance() > 0)
 				end_affecter.set(-.3);
 		}
-		
-	
+		*/
+	/*
 		//winch
 		if(cont.getDPAD("up")) {	//up and down dpad change speed
 			if(winch_power < 1 && !winch_disabled) {
@@ -389,7 +419,7 @@ public class Robot extends IterativeRobot {
 			winch_motors.set(winch_power);
 		else 
 			winch_motors.set(0);
-	
+	*/
 		//pneumatics
 		
 		if (cont.getB())	//B = down
@@ -409,21 +439,27 @@ public class Robot extends IterativeRobot {
 		
 		//send info to dashboard
 		
-		double encDistance = enc.getDistance();
-		
+		//double encDistance = enc.getDistance();
+		/*
 		dash.putNumber("angle",  angle);
 		//dash.putNumber("rate", rate);
 		dash.putNumber("encRate",  enc.get());
 		dash.putNumber("speed",  speed);
 		dash.putNumber("pidval", Pval);
-		dash.putNumber("power",  winch_power);
+		//dash.putNumber("power",  winch_power);
 		dash.putNumber("arm power", arm_power);
 		dash.putBoolean("manual arm", manual);
-		dash.putBoolean("winchon", cont.getRB());
+		//dash.putBoolean("winchon", cont.getRB());
 		//dash.putNumber("navX angle", navXAngle);
 		dash.putNumber("encoder", encDistance);
-	}
 		
+	*/
+		
+		dash.putNumber("armPower", armPower);
+		dash.putNumber("RY", cont.getRY());
+		dash.putNumber("right trigger", cont.getRT());
+		
+		}
 	private double limit(double d) {
 		if(d>1)
 			return 1;
@@ -440,7 +476,7 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		
 			}
-	
+/*	
 	private void disWinch() {
 		winch_disabled = true;
 		try {
@@ -451,4 +487,5 @@ public class Robot extends IterativeRobot {
 		winch_disabled = false;
 	
 	}
+	*/
 }
